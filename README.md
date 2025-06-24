@@ -38,25 +38,26 @@ The repository is organized first by the target operating system, and then by ca
 - **`windows/`**: Scripts tailored for the Windows operating system.
 - **`linux/`**: Scripts designed for Linux environments.
 
-Within each of these directories, you'll find scripts sorted into the following categories:
+Within each of these directories, you'll find scripts sorted into functional categories. A special **`misc/`** folder exists as a catch-all for scripts that don't fit neatly into the other predefined categories.
 
 ```sh
 python-scripts/
 ├── cross_platform/
-│ ├── backups/
-│ ├── data_processing/
-│ ├── dev_tools/
-│ ├── file_management/
-│ ├── media_management/
-│ ├── system_automation/
-│ ├── text_processing/
-│ └── web_scraping/
+│   ├── backups/
+│   ├── data_processing/
+│   ├── dev_tools/
+│   ├── file_management/
+│   ├── media_management/
+│   ├── misc/                 # Catch-all for miscellaneous scripts
+│   ├── system_automation/
+│   ├── text_processing/
+│   └── web_scraping/
 ├── macos/
-│ ├── ... (same categories as above)
+│   └── ... (same categories as above)
 ├── windows/
-│ ├── ...
+│   └── ...
 └── linux/
-└── ...
+    └── ...
 ```
 
 ---
@@ -86,7 +87,7 @@ python-scripts/
 4. **Run the Script**: Execute the script from your terminal.
 
    ```sh
-   python3 macos/file_management/my_cool_script.py
+   python3 cross_platform/misc/hello_world.py
    ```
 
 ---
