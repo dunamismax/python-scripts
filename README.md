@@ -1,7 +1,7 @@
-<h1 align="center">Stephen's Python Scripts</h1>
+<h1 align="center">DunamisMax's Python Scripts</h1>
 
 <p align="center">
-  <img src="https://miro.medium.com/v2/resize:fit:1400/0*zcSuumXX6eUkk4mO" alt="Python image" width="400">
+  <img src="https://www.unixmen.com/wp-content/uploads/2017/02/Python-Programming-Language.png" alt="Python image" width="400">
 </p>
 
 <p align="center">
