@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import argparse
 import shutil
 import subprocess
 import sys
@@ -18,6 +17,10 @@ from rich.table import Table
 
 # --- Configuration ---
 OUTPUT_SUFFIX = "_5.1_upmixed"
+DEFAULT_LFE_CROSSOVER = 120
+DEFAULT_FRONT_DELAY = 1.5
+DEFAULT_REAR_DELAY = 20
+DEFAULT_OUTPUT_FORMAT = ".flac"
 
 # Initialize Rich Console for beautiful output
 console = Console()
@@ -68,7 +71,7 @@ def get_audio_info(file_path: Path) -> dict:
         return {}
 
 
-def upmix_file_to_5_1(file_path: Path, args: argparse.Namespace):
+def upmix_file_to_5_1(file_path: Path):
     """
     Upmixes a stereo audio file to 5.1 surround sound using a sophisticated FFmpeg filtergraph.
     """
@@ -81,7 +84,7 @@ def upmix_file_to_5_1(file_path: Path, args: argparse.Namespace):
         )
         return False
 
-    output_file = file_path.with_name(f"{file_path.stem}{OUTPUT_SUFFIX}{args.output_format}")
+    output_file = file_path.with_name(f"{file_path.stem}{OUTPUT_SUFFIX}{DEFAULT_OUTPUT_FORMAT}")
 
     # --- Corrected and Simplified FFmpeg Filtergraph ---
     # This version uses the correct `adelay` syntax for mono streams and removes the
@@ -89,11 +92,11 @@ def upmix_file_to_5_1(file_path: Path, args: argparse.Namespace):
     ffmpeg_filter = (
         f"[0:a]channelsplit=channel_layout=stereo[L][R];"
         f"[L][R]amerge=inputs=2,pan=mono|c0=0.5*FL+0.5*FR,highshelf=f=2000:g=-6[FC];"
-        f"[L][R]amerge=inputs=2,pan=mono|c0=0.5*FL+0.5*FR,lowpass=f={args.lfe_crossover}[LFE];"
-        f"[L]adelay={args.front_delay}[FLd];"
-        f"[R]adelay={args.front_delay}[FRd];"
-        f"[L]adelay={args.rear_delay},lowpass=f=7000[SL];"
-        f"[R]adelay={args.rear_delay},lowpass=f=7000[SR];"
+        f"[L][R]amerge=inputs=2,pan=mono|c0=0.5*FL+0.5*FR,lowpass=f={DEFAULT_LFE_CROSSOVER}[LFE];"
+        f"[L]adelay={DEFAULT_FRONT_DELAY}[FLd];"
+        f"[R]adelay={DEFAULT_FRONT_DELAY}[FRd];"
+        f"[L]adelay={DEFAULT_REAR_DELAY},lowpass=f=7000[SL];"
+        f"[R]adelay={DEFAULT_REAR_DELAY},lowpass=f=7000[SR];"
         f"[FLd][FRd][FC][LFE][SL][SR]join=inputs=6:channel_layout=5.1[a]"
     )
 
@@ -110,8 +113,8 @@ def upmix_file_to_5_1(file_path: Path, args: argparse.Namespace):
         "[a]",
         "-y",
         "-c:a",
-        "flac" if args.output_format == ".flac" else "ac3",
-        *(["-b:a", "640k"] if args.output_format == ".ac3" else []),
+        "flac" if DEFAULT_OUTPUT_FORMAT == ".flac" else "ac3",
+        *(["-b:a", "640k"] if DEFAULT_OUTPUT_FORMAT == ".ac3" else []),
         str(output_file),
     ]
 
@@ -163,42 +166,13 @@ def main():
     if not check_dependencies():
         sys.exit(1)
 
-    parser = argparse.ArgumentParser(
-        description="Intelligently upmix stereo audio files to 5.1 surround sound using FFmpeg.",
-        formatter_class=argparse.RawTextHelpFormatter,
-        epilog="Tip: Drag and drop your audio files onto the terminal window after the script name and options.",
-    )
-    parser.add_argument("files", nargs="+", help="One or more audio files to process.")
-    parser.add_argument(
-        "-f",
-        "--output-format",
-        choices=[".flac", ".ac3"],
-        default=".flac",
-        help="Output format. Default: .flac (lossless)",
-    )
-    parser.add_argument(
-        "--lfe-crossover",
-        type=int,
-        default=120,
-        help="Crossover frequency in Hz for the LFE channel. Default: 120",
-    )
-    parser.add_argument(
-        "--front-delay",
-        type=float,
-        default=1.5,
-        help="Delay in milliseconds for front channels. Default: 1.5",
-    )
-    parser.add_argument(
-        "--rear-delay",
-        type=float,
-        default=20,
-        help="Delay in milliseconds for rear/surround channels. Default: 20",
-    )
-
-    args = parser.parse_args()
+    if len(sys.argv) < 2:
+        console.print("[bold red]Error: No audio files provided.[/bold red]")
+        console.print("Usage: python3 upmix_audio.py <file1> [file2 ...]")
+        sys.exit(1)
 
     valid_files = []
-    for f in args.files:
+    for f in sys.argv[1:]:
         p = Path(f)
         if p.is_file():
             valid_files.append(p)
@@ -221,7 +195,7 @@ def main():
     success_count = 0
     fail_count = 0
     for file_path in valid_files:
-        if upmix_file_to_5_1(file_path, args):
+        if upmix_file_to_5_1(file_path):
             success_count += 1
         else:
             fail_count += 1

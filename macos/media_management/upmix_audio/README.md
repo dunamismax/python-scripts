@@ -70,15 +70,15 @@ Follow these steps to set up a dedicated environment for the script.
    If your terminal prompt doesn't show `(venv)`, run `source venv/bin/activate` inside the script's directory.
 
 2. **Run the Script with Your Audio Files**
-   Type `python3 advanced_upmixer.py` followed by a space. Then, **drag one or more stereo audio files** from a Finder window and drop them onto the Terminal window. The file paths will be pasted automatically.
+   Type `python3 upmix_audio.py` followed by a space. Then, **drag one or more stereo audio files** from a Finder window and drop them onto the Terminal window. The file paths will be pasted automatically.
 
 3. **Press Enter**
-   The script will show you a list of the files it is about to process and then begin the upmixing.
+   The script will show you a list of the files it is about to process and then begin the upmixing. The script will always use the ideal default settings for upmixing to FLAC.
 
    **Example Command:**
 
    ```bash
-   (venv) python3 advanced_upmixer.py "/Users/sawyer/Music/track1.mp3" "/Users/sawyer/Downloads/soundtrack.wav"
+   (venv) python3 upmix_audio.py "/Users/sawyer/Music/track1.mp3" "/Users/sawyer/Downloads/soundtrack.wav"
    ```
 
 ## Output Files
