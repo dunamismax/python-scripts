@@ -36,7 +36,6 @@ The repository is organized first by the target operating system, and then by ca
 - **`cross_platform/`**: Scripts that are OS-agnostic and written to work on macOS, Windows, and Linux without modification.
 - **`macos/`**: Scripts that are written specifically for macOS, likely using macOS-specific file paths or command-line tools.
 - **`windows/`**: Scripts tailored for the Windows operating system.
-- **`linux/`**: Scripts designed for Linux environments.
 
 Within each of these directories, you'll find scripts sorted into functional categories. A special **`misc/`** folder exists as a catch-all for scripts that don't fit neatly into the other predefined categories.
 
@@ -48,7 +47,7 @@ python-scripts/
 │   ├── dev_tools/
 │   ├── file_management/
 │   ├── media_management/
-│   ├── misc/                 # Catch-all for miscellaneous scripts
+│   ├── misc/
 │   ├── system_automation/
 │   ├── text_processing/
 │   └── web_scraping/
@@ -56,8 +55,6 @@ python-scripts/
 │   └── ... (same categories as above)
 ├── windows/
 │   └── ...
-└── linux/
-    └── ...
 ```
 
 ---
